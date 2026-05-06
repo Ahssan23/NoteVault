@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload</title>
+    <!-- <link rel="stylesheet" href="upload.css"> -->
+         <link rel="stylesheet" href="/upload.css">
+
+</head>
+<body>
+   
+  <header>
+    <div class="logo">// NoteVault</div>
+    <h1>Create a <span>Vault</span></h1>
+  </header>
+
+  <form class="vault-form" id="uploadForm">
+
+    <div class="field-group">
+      <label class="field-label" for="title">Title</label>
+      <input type="text" id="title" placeholder="My vault..." />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="desc">Description</label>
+      <textarea id="desc" placeholder="What's in this vault..."></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Files</label>
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" multiple
+          accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt" />
+        <div class="drop-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path d="M16 22V10M10 16l6-6 6 6" stroke="#e8ff47" stroke-width="1.8" stroke-linecap="round"/>
+            <rect x="4" y="4" width="24" height="24" rx="4" stroke="#2a2a32" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <p class="drop-label">Drop files or <span>browse</span></p>
+      </div>
+      <div class="file-chips" id="fileChips"></div>
+    </div>
+
+    <button class="submit-btn" type="submit" id="submitBtn">Create Vault</button>
+  </form>
+
+  <div id="status-bar"></div>
+
+  <div class="vault-result" id="vaultResult">
+    <p class="vault-result-label">Vault ID — save this to retrieve your files</p>
+    <div class="vault-id-row">
+      <span class="vault-id-text" id="vaultIdDisplay"></span>
+      <button class="copy-btn" id="copyBtn">Copy</button>
+    </div>
+  </div>
+
+  <script>
+    const BASE_URL = 'http://localhost:3000';
+
+    const form        = document.getElementById('uploadForm');
+    const fileInput   = document.getElementById('fileInput');
+    const fileChips   = document.getElementById('fileChips');
+    const submitBtn   = document.getElementById('submitBtn');
+    const statusBar   = document.getElementById('status-bar');
+    const vaultResult = document.getElementById('vaultResult');
+    const vaultIdDisplay = document.getElementById('vaultIdDisplay');
+    const copyBtn     = document.getElementById('copyBtn');
+    const dropZone    = document.getElementById('dropZone');
+
+    // track selected files manually so we can remove individual ones
+    let selectedFiles = [];
+
+    function setStatus(msg, type = '') {
+      statusBar.textContent = msg;
+      statusBar.className = type;
+    }
+
+    function renderChips() {
+      fileChips.innerHTML = '';
+      selectedFiles.forEach((file, i) => {
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.innerHTML = `
+          <span>${file.name}</span>
+          <button class="chip-remove" data-index="${i}" title="Remove">×</button>
+        `;
+        fileChips.appendChild(chip);
+      });
+    }
+
+    // add files, avoid duplicates by name
+    function addFiles(newFiles) {
+      const existing = new Set(selectedFiles.map(f => f.name));
+      for (const file of newFiles) {
+        if (!existing.has(file.name)) {
+          selectedFiles.push(file);
+          existing.add(file.name);
+        }
+      }
+      renderChips();
+    }
+
+    fileInput.addEventListener('change', () => {
+      addFiles(Array.from(fileInput.files));
+      fileInput.value = ''; // reset so same file can be re-added after removal
+    });
+
+    // remove chip
+    fileChips.addEventListener('click', e => {
+      const btn = e.target.closest('.chip-remove');
+      if (!btn) return;
+      selectedFiles.splice(Number(btn.dataset.index), 1);
+      renderChips();
+    });
+
+    // drag and drop
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      addFiles(Array.from(e.dataTransfer.files));
+    });
+
+    // copy vault ID
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(vaultIdDisplay.textContent).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = 'Copy', 2000);
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById('title').value.trim();
+      const desc  = document.getElementById('desc').value.trim();
+
+      if (!title) { setStatus('title is required.', 'err'); return; }
+      if (!selectedFiles.length) { setStatus('add at least one file.', 'err'); return; }
+
+      const vaultId = crypto.randomUUID();
+
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('desc', desc);
+      formData.append('vaultId', vaultId);
+      selectedFiles.forEach(file => formData.append('files', file));
+
+      submitBtn.disabled = true;
+      setStatus('uploading...');
+      vaultResult.classList.remove('show');
+
+      try {
+        const res  = await fetch(`${BASE_URL}/upload/Create`, { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (res.ok) {
+          setStatus(`${selectedFiles.length} file${selectedFiles.length !== 1 ? 's' : ''} uploaded.`, 'ok');
+          vaultIdDisplay.textContent = vaultId;
+          vaultResult.classList.add('show');
+
+          // reset form
+          form.reset();
+          selectedFiles = [];
+          renderChips();
+        } else {
+          setStatus(data.message ?? 'upload failed.', 'err');
+        }
+      } catch (err) {
+        setStatus('connection failed — is the server running?', 'err');
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

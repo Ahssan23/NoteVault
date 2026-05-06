@@ -1,0 +1,268 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d0d0f;
+  --surface: #16161a;
+  --border: #2a2a32;
+  --accent: #e8ff47;
+  --accent2: #ff6b35;
+  --text: #f0f0f0;
+  --muted: #666;
+  --card-bg: #1a1a20;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -200px; left: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(232,255,71,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+header { text-align: center; margin-bottom: 48px; }
+
+.logo {
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+h1 { font-size: clamp(32px, 6vw, 52px); font-weight: 800; letter-spacing: -2px; line-height: 1; }
+h1 span { color: var(--accent); }
+
+/* ── Form Card ── */
+.vault-form {
+  width: 100%;
+  max-width: 520px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+input[type="text"],
+textarea {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  outline: none;
+  padding: 14px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--text);
+  letter-spacing: 0.5px;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+input[type="text"]:focus,
+textarea:focus { border-color: var(--accent); }
+
+textarea { resize: vertical; min-height: 80px; }
+
+/* ── File Drop Zone ── */
+.drop-zone {
+  border: 1.5px dashed var(--border);
+  border-radius: 4px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+  border-color: var(--accent);
+  background: rgba(232,255,71,0.03);
+}
+
+.drop-zone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.drop-icon { margin-bottom: 10px; opacity: 0.5; }
+
+.drop-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.drop-label span { color: var(--accent); }
+
+/* ── File Chips ── */
+.file-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 5px 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: chipIn 0.2s ease both;
+}
+
+@keyframes chipIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.chip-remove {
+  cursor: pointer;
+  color: var(--accent2);
+  font-size: 13px;
+  line-height: 1;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+/* ── Submit Button ── */
+.submit-btn {
+  background: var(--accent);
+  color: #0d0d0f;
+  border: none;
+  padding: 16px;
+  border-radius: 4px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  margin-top: 8px;
+}
+
+.submit-btn:hover { background: #d4eb30; }
+.submit-btn:active { transform: scale(0.98); }
+.submit-btn:disabled { background: var(--muted); cursor: not-allowed; }
+
+/* ── Status / Message ── */
+#status-bar {
+  margin-top: 24px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  min-height: 16px;
+  transition: color 0.2s;
+}
+
+#status-bar.ok { color: var(--accent); }
+#status-bar.err { color: var(--accent2); }
+
+/* ── Vault ID Result ── */
+.vault-result {
+  display: none;
+  margin-top: 24px;
+  width: 100%;
+  max-width: 520px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--accent);
+  border-radius: 6px;
+  padding: 20px 24px;
+  animation: cardIn 0.35s ease both;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.vault-result.show { display: block; }
+
+.vault-result-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.vault-id-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.vault-id-text {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 1px;
+  word-break: break-all;
+}
+
+.copy-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 6px 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--text);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }

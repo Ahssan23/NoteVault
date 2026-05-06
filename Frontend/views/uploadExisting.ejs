@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload</title>
+</head>
+<body>
+    <form  id="uploadForm">
+        <input type="text" id="vaultId" placeholder="Enter Vault Id"> 
+        <input type="text" id="title" placeholder="title">
+        <input type="text" id="desc" placeholder="description">
+        <input type="file" id="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt">
+        
+        <button type="submit" id="submitBtn">Create a Vault</button>
+
+    </form>
+
+
+
+
+    <div id="message-div">
+        <p id="message"></p>
+    </div>
+
+    <script>
+        
+        const URL = 'http://localhost:3002';
+        
+        const form = document.querySelector("#uploadForm");
+        
+        form.addEventListener("submit", async(e)=>{
+            e.preventDefault();
+            
+            
+            const formData = new FormData();
+            const title = document.querySelector("#title").value;
+            const desc = document.querySelector("#desc").value;
+            const file = document.querySelector("#file").files;
+            const vaultId = document.querySelector("#vaultId").value;
+            console.log(vaultId)
+
+                const message = document.querySelector("#message");
+
+                formData.append('title',title);
+                formData.append('desc', desc);
+                formData.append('vaultId',vaultId );
+
+
+
+
+                for (var i = 0; i<file.length ; i++){
+                    console.log(file[i])
+                    formData.append('files',file[i]);
+                }
+                const res = await fetch(`${URL}/upload/uploadExisting`, {
+                    method:"POST",
+                    body:formData
+                })
+                message.innerText = vaultId
+                const data = await res.json();
+                console.log(data);
+
+
+        })
+
+
+
+    </script>
+</body>
+</html>

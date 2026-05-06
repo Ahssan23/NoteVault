@@ -1,0 +1,101 @@
+authentication:
+
+signup , login 
+
+
+create vault :
+
+input fields, 
+file ( jpg, or pdf)
+title ,
+description ( optional )
+
+model 
+
+id 
+title 
+description
+content
+unique key ( dynamically generated or let useer create it himself)
+key is also gonna be stored in db 
+
+now we take the key and id and make other table 
+keys content could only unlocked with key 
+user enter the key and we sesarch the key and find the id , equivalent to that in second table 
+take that id and find content in content table
+
+
+return vault id => allow user to upload docs, notes , files (pdf, jpg, docx)
+give user options for private or public or selected ( view for notes)
+folders inside vaults
+search inside vaults
+autherization
+
+
+retrieve notes :
+enter vault id => get all the notes in that vault 
+
+vault dashboard :total files
+recent uploads
+file types breakdown
+activity (who uploaded what)
+
+
+give other people permissions to upload
+
+roles :
+owner 
+contributer
+viewer
+
+
+
+
+
+
+
+
+
+
+USER DATABASE :
+email
+username
+password 
+
+
+
+
+
+
+
+
+
+Vault
+- id
+- name          ("Biology Notes")
+- secretKey     ("XK9-2PL-88Z")  ← random generated
+- createdBy     (userId)
+- createdAt
+
+File
+- id
+- vaultId       (which vault this file belongs to)
+- r2Key         ("vaults/vaultId/uuid.pdf")
+- originalName  ("lecture1.pdf")
+- mimetype      ("application/pdf")
+- size          (in bytes)
+- uploadedAt
+
+User
+- id
+- name
+- email
+- password
+
+
+
+
+
+when we are creating file we store key into vault db 
+we store randomly generated namem into db
+we store 

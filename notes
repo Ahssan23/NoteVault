@@ -1,0 +1,52 @@
+try to understand this error
+(sequelize) Warning: Model "User" is declaring public class fields for attribute(s): "username", "email", "password".
+
+
+understand passport 
+
+config module 
+
+
+
+
+objectives
+store data info into db
+
+
+make model for every vault
+
+
+
+
+
+
+
+
+
+
+Upload
+typescriptnew PutObjectCommand({ Bucket, Key, Body, ContentType })
+Download
+typescriptnew GetObjectCommand({ Bucket, Key })
+Delete single
+typescriptnew DeleteObjectCommand({ Bucket, Key })
+Delete multiple
+typescriptnew DeleteObjectsCommand({
+  Bucket,
+  Delete: {
+    Objects: [{ Key: 'file1.png' }, { Key: 'file2.png' }]
+  }
+})
+List objects
+typescriptnew ListObjectsV2Command({ Bucket, Prefix: 'folder/' })
+Presigned URL (get)
+typescriptimport { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+
+const url = await getSignedUrl(client, new GetObjectCommand({ Bucket, Key }), { expiresIn: 3600 })
+Presigned URL (upload)
+typescriptconst url = await getSignedUrl(client, new PutObjectCommand({ Bucket, Key }), { expiresIn: 3600 })
+Check if object exists
+typescriptnew HeadObjectCommand({ Bucket, Key })
+Copy object
+typescriptnew CopyObjectCommand({ Bucket, CopySource: 'bucket/oldkey', Key: 'newkey' })
+All work the same way — await client.send(new XCommand({...})). Same for R2 since it's S3 compatible.

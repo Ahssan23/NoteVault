@@ -1,0 +1,176 @@
+:root {
+    --bg-color: #f7f7f7;
+    --card-bg: #ffffff;
+    --text-main: #1e2329;
+    --text-muted: #707a8a;
+    --primary-btn: #1e2329;
+    --primary-btn-text: #ffffff;
+    --border-color: #eaecef;
+    --input-focus: #f0b90b; /* Accent color */
+    --radius: 12px;
+    --transition: all 0.2s ease-in-out;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+}
+
+.auth-card {
+    background: var(--card-bg);
+    padding: 32px;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Tabs */
+.auth-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding-bottom: 4px;
+}
+
+.tab-btn.active {
+    color: var(--text-main);
+    border-bottom: 2px solid var(--text-main);
+}
+
+/* Social Buttons */
+.social-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.social-btn:hover {
+    background-color: #f9f9f9;
+}
+
+.social-btn img {
+    width: 20px;
+    margin-right: 12px;
+}
+
+/* Divider */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 24px 0;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.divider span {
+    margin: 0 10px;
+}
+
+/* Form Styles */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background-color: #fff;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--input-focus);
+}
+
+.submit-btn {
+    background-color: var(--primary-btn);
+    color: var(--primary-btn-text);
+    padding: 16px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    opacity: 0.9;
+}
+
+.footer-link {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.footer-link a {
+    color: var(--text-main);
+    text-decoration: none;
+    font-weight: 600;
+}

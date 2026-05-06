@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <button class="tab-btn active">Login</button>
+                <button class="tab-btn" onclick="window.location.href = '/signup' ">Sign Up</button>
+            </div>
+
+            <div class="social-section" id="loginGoogle">
+                <button class="social-btn" id="googleBtn">
+                    <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google">
+                    Continue with Google
+                </button>
+              
+            </div>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <form id="form" class="auth-form">
+                <div class="input-group">
+                    <label for="username">Email address</label>
+                    <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        placeholder="Enter your email address"
+                        required
+                    />
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        required
+                    />
+                </div>
+
+                <button type="submit" id="button" class="submit-btn">Login</button>
+            </form>
+
+            <div class="footer-link">
+                Don't have an account? <a href="/signup">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const URL = "http://localhost:3000";
+        const form = document.querySelector("#form");
+        const username = document.querySelector("#username");
+        const password = document.querySelector("#password");
+        const googleBtn = document.querySelector("#googleBtn")
+
+        googleBtn.addEventListener("click", async()=>{
+            window.location.href = `${URL}/login/google`;
+        })
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const res = await fetch(`${URL}/login/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials:"include",
+                body: JSON.stringify({
+                    username: username.value,
+                    password: password.value,
+                }),
+            });
+            const data = await res.json();
+            if(data.status === 200) window.location.href= "/";
+        });
+    </script>
+</body>
+</html>

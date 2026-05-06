@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <button class="tab-btn" onclick="window.location.href='/login'">Login</button>
+                <button class="tab-btn active">Sign Up</button>
+            </div>
+
+            <div class="social-section">
+                <button class="social-btn">
+                    <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google">
+                    Continue with Google
+                </button>
+            
+            </div>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <form id="signupForm" class="auth-form">
+                <div class="input-group">
+                    <label for="email">Email address</label>
+                    <input type="email" required name="email" placeholder="Enter your email address" id="email">
+                </div>
+
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" required name="username" placeholder="Choose a username" id="username">
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" required name="password" placeholder="Enter password" id="password">
+                </div>
+
+                <div class="input-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" required name="confirmPassword" id="confirmPassword" placeholder="Confirm your password">
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="updates">
+                    <label for="updates">Please keep me updated by email with the latest news and reward programs.</label>
+                </div>
+
+                <button id="button" type="submit" class="submit-btn">Create an account</button>
+            </form>
+
+            <div id="message-container">
+                <div id="message"></div>
+            </div>
+
+            <div class="footer-link">
+                Already have an account? <a href="/login">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const URL = "http://localhost:3000";
+        const form = document.querySelector("#signupForm");
+        const email = document.querySelector("#email");
+        const username = document.querySelector("#username");
+        const password = document.querySelector("#password");
+        const confirmPassword = document.querySelector("#confirmPassword");
+        const message = document.querySelector("#message");
+        
+        form.addEventListener("submit", async(e) => {
+            e.preventDefault();
+            message.style.color = 'red'; // Reset color for errors
+            
+            if(password.value.length < 7) {
+                message.innerText = "Password should not be less than 7 characters";
+                return;
+            }
+            if(password.value !== confirmPassword.value) {
+                message.innerText = "Passwords do not match";
+                return;
+            }
+                    
+            const res = await fetch(`${URL}/signup/createUser`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    email: email.value,
+                    username: username.value,
+                    password: password.value
+                })
+            });
+
+            const data = await res.json();
+            if (data.status == 200){
+                message.style.color = 'green';
+            }
+            message.innerText = data.message;
+        });
+    </script>
+</body>
+</html>
