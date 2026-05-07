@@ -17,13 +17,19 @@ import { GetVaultModule } from './get-vault/get-vault.module';
     }),
     SequelizeModule.forRoot({
     dialect:'postgres',
-    host:'localhost',
+    host:process.env.DATABASE_URL,
     port:5432,
-    username:'postgres',
-    password:'root',
-    database:'notevault',
+    username:process.env.DATABASE_USER,
+    password:process.env.DATABASE_PASSWORD,
+    database:process.env.DATABASE_NAME,
     autoLoadModels:true,
     logging:true,
+    dialectOptions:{
+      ssl:{
+        require:true,
+        rejectUnauthorized:true
+      }
+    }
     
   }),
     HomeModule, SignupModule, LoginModule, CreateVaultModule, UploadExistingModule, GetVaultModule],
