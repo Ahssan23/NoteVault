@@ -99,3 +99,22 @@ User
 when we are creating file we store key into vault db 
 we store randomly generated namem into db
 we store 
+
+
+
+
+6 may 2026
+today i am gonna deploy the application somewhere which should be linked to github (done)
+
+7 may 2026
+redirect user to login after signup (done)
+fix oauth2 on signup page (done)
+fix upload failed  (done)
+store the title desc etc... into DATABASE (done)
+make a homepage (done )
+figure out a way to run single module
+commit changes to github. sure
+
+
+
+----   id --------  title ------------- desc -------------- vaultid ------------

@@ -3,6 +3,7 @@
     import {signup} from "./routes/signup.js"
     import {login} from "./routes/login.js";
     import { upload } from "./routes/upload.js";
+    import { home } from "./routes/home.js";
 
     dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.static('public'));
     app.use(signup);  
     app.use(login);  
     app.use(upload);
+    app.use(home);
 
     app.listen(port,()=>{
         console.log("FRONTEND SERVER IS RUNNING......")

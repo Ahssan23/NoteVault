@@ -4,15 +4,18 @@ import { v4 as uuid } from "uuid";
 import 'multer';
 import { Vault } from '../models/vault.model';
 import { InjectModel } from '@nestjs/sequelize';
+import { Files } from '../models/files.model';
 
 @Injectable()
 export class CreateVaultService {
   private r2: S3Client;
 
 constructor(@InjectModel(Vault)
-        private readonly vaultModel: typeof Vault) {
+        private readonly vaultModel: typeof Vault,
+      @InjectModel(Files) private readonly filesModel: typeof Files
+      ) {
 
-    
+
     this.r2 = new S3Client({
       region: 'auto',
       endpoint: process.env.R2_ENDPOINT!,
@@ -48,6 +51,7 @@ constructor(@InjectModel(Vault)
       }
     }
       catch (error) {
+        console.log(error)
         const res = await this.r2.send(new ListObjectsV2Command({
           Bucket:process.env.R2_BUCKET_NAME,
           Prefix:`container/${vaultId}`
@@ -59,20 +63,24 @@ constructor(@InjectModel(Vault)
             Key:e.Key
           }))
         }
-
-        console.log(error)
+        
+        throw new InternalServerErrorException("Upload failed");
       }
-      throw new InternalServerErrorException("Upload failed");
       
-    await this.storeVaultDb(vaultId)
+    await this.storeVaultDb(title, desc, vaultId)
       return uploadedKeys ;
     }
 
 
 
 
-      async storeVaultDb(vaultId:string) :Promise<string>{
+      async storeVaultDb(title:string, desc:string, vaultId:string) :Promise<string>{
         await this.vaultModel.create({
+          vaultId:vaultId
+        })
+        await this.filesModel.create({
+          title:title,
+          desc:desc,
           vaultId:vaultId
         })
 

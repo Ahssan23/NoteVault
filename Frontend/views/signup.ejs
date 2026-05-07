@@ -15,7 +15,7 @@
             </div>
 
             <div class="social-section">
-                <button class="social-btn">
+                <button class="social-btn" id="googleBtn">
                     <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google">
                     Continue with Google
                 </button>
@@ -75,6 +75,11 @@
         const confirmPassword = document.querySelector("#confirmPassword");
         const message = document.querySelector("#message");
         
+         googleBtn.addEventListener("click", async()=>{
+            window.location.href = `${URL}/login/google`;
+        })
+
+
         form.addEventListener("submit", async(e) => {
             e.preventDefault();
             message.style.color = 'red'; // Reset color for errors
