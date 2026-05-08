@@ -15,9 +15,13 @@
   <div class="nav-links">
     <a href="#how">How it works</a>
     <a href="#features">Features</a>
-    <a href="#demo">Demo</a>
   </div>
-  <a href="/login" class="nav-cta">Get Started</a>
+  <% if(!loggedIn){  %>
+
+    <a href="/login" class="nav-cta">Login</a>
+    <a href="/signup" class="nav-cta">Signup</a>
+    <%  } %>
+
 </nav>
 
 <!-- HERO -->
@@ -34,8 +38,8 @@
     Come back anytime. No account clutter — just a key.
   </p>
   <div class="hero-actions">
-    <a href="/upload" class="btn-primary">Create a Vault</a>
-    <a href="/retrieve" class="btn-secondary">Retrieve Files</a>
+    <a href="/createvault/upload" class="btn-primary">Create a Vault</a>
+    <a href="/getVault" class="btn-secondary">Retrieve Files</a>
   </div>
 </section>
 
@@ -143,62 +147,14 @@
   </div>
 </div>
 
-<!-- DEMO PREVIEW -->
-<div class="section fade-up" id="demo">
-  <div class="section-label">Preview</div>
-  <div class="section-title">See it in action.</div>
-
-  <div class="demo-wrap">
-    <!-- Upload side -->
-    <div class="demo-panel">
-      <div class="demo-label">// Create vault</div>
-      <div class="demo-field">
-        <label>Title</label>
-        <div class="fake-input">Q3 Reports 2024</div>
-      </div>
-      <div class="demo-field">
-        <label>Description</label>
-        <div class="fake-input muted-text">Financial reports for Q3, investor deck, meeting notes.</div>
-      </div>
-      <div class="demo-label" style="margin-top:20px">Files attached</div>
-      <div class="demo-files">
-        <div class="demo-file"><span class="demo-file-dot"></span>Q3_Report_Final.pdf</div>
-        <div class="demo-file"><span class="demo-file-dot"></span>Investor_Deck.pptx</div>
-        <div class="demo-file"><span class="demo-file-dot"></span>Meeting_Notes.docx</div>
-      </div>
-      <div style="margin-top:20px">
-        <div class="demo-label">Vault key generated</div>
-        <div class="demo-key-row">
-          <span class="demo-key-val">a3f9-cc12-...-8b4e</span>
-          <button class="demo-copy" onclick="this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)">Copy</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Retrieve side -->
-    <div class="demo-panel">
-      <div class="demo-label">// Retrieve vault</div>
-      <div class="demo-retrieve">
-        <div class="demo-field">
-          <label>Enter vault key</label>
-          <div class="fake-input accent-input">a3f9-cc12-...-8b4e</div>
-        </div>
-        <button class="demo-btn">Retrieve Files</button>
-        <div class="demo-label" style="margin-top:8px">Found 3 files</div>
-        <div class="demo-files">
-          <div class="demo-file"><span class="demo-file-dot"></span>Q3_Report_Final.pdf</div>
-          <div class="demo-file"><span class="demo-file-dot"></span>Investor_Deck.pptx</div>
-          <div class="demo-file"><span class="demo-file-dot"></span>Meeting_Notes.docx</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
+    
+   
 <!-- CTA STRIP -->
 <div class="cta-strip">
   <h2>Ready to vault?</h2>
-  <p>No setup. No complexity. Just drop and lock.</p>
+  <h3>No setup. No complexity. Just drop and lock.</h3>
+<h3>Create a free account to upload files and access them anytime — no key needed.</h3>
+
   <a href="/signup" class="btn-dark">Create Free Account</a>
 </div>
 

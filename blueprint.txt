@@ -116,5 +116,11 @@ figure out a way to run single module
 commit changes to github. sure
 
 
+8 may 2026
+
+fix design of login and signup
+add anchors for add vault create vault get vault in home page (done)
+when retrieving files also display title and description
+
 
 ----   id --------  title ------------- desc -------------- vaultid ------------

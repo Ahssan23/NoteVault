@@ -4,6 +4,7 @@
     import {login} from "./routes/login.js";
     import { upload } from "./routes/upload.js";
     import { home } from "./routes/home.js";
+    import cookieParser from "cookie-parser"
 
     dotenv.config();
 
@@ -13,7 +14,7 @@
 
 app.use(express.static('public'));
 
-
+app.use(cookieParser())
     app.set("view engine", "ejs");
 
     const port = process.env.PORT;
