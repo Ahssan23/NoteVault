@@ -11,7 +11,7 @@ dotenv.config();
 @Injectable()
 export class GetVaultService {
     private r2 : S3Client;
-    constructor(@InjectModel(Files) private readonly filesModel: typeof Files){
+    constructor(){
         this.r2= new S3Client({
             region: 'auto',
       endpoint: process.env.R2_ENDPOINT!,
@@ -52,15 +52,15 @@ export class GetVaultService {
         return data;
     }
 
-    async getFileData(vaultId:string){
-        const fileData = this.filesModel.findAll({
-            where:{
-                vaultId:vaultId
-            }
-        })
-        return fileData;
+    // async getFileData(vaultId:string){
+    //     const fileData = this.filesModel.findAll({
+    //         where:{
+    //             vaultId:vaultId
+    //         }
+    //     })
+    //     return fileData;
 
-    }
+    
 }
 
 
