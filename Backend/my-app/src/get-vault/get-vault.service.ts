@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { S3Client, GetObjectCommand ,ListObjectsV2Command} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import dotenv from "dotenv";
+import { InjectModel } from '@nestjs/sequelize';
+import { Files } from '../models/files.model';
 dotenv.config();
 
 
@@ -9,7 +11,7 @@ dotenv.config();
 @Injectable()
 export class GetVaultService {
     private r2 : S3Client;
-    constructor(){
+    constructor(@InjectModel(Files) private readonly filesModel: typeof Files){
         this.r2= new S3Client({
             region: 'auto',
       endpoint: process.env.R2_ENDPOINT!,
@@ -46,7 +48,18 @@ export class GetVaultService {
                 
             })?? []
         )
+        
         return data;
+    }
+
+    async getFileData(vaultId:string){
+        const fileData = this.filesModel.findAll({
+            where:{
+                vaultId:vaultId
+            }
+        })
+        return fileData;
+
     }
 }
 

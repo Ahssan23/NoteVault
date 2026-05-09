@@ -74,7 +74,7 @@ constructor(@InjectModel(Vault)
 
 
 
-      async storeVaultDb(title:string, desc:string, vaultId:string) :Promise<string>{
+      async storeVaultDb(title:string, desc:string, vaultId:string) :Promise<boolean>{
         await this.vaultModel.create({
           vaultId:vaultId
         })
@@ -84,7 +84,7 @@ constructor(@InjectModel(Vault)
           vaultId:vaultId
         })
 
-        return 'somethign'
+        return true
       }
 
 

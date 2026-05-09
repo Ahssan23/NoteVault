@@ -3,6 +3,8 @@ import { S3Client, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/clien
 import dotenv from "dotenv";
 import {v4 as uuid }from "uuid";
 import 'multer';
+import { Files } from 'src/models/files.model';
+import { InjectModel } from '@nestjs/sequelize';
 
 
 dotenv.config();
@@ -11,7 +13,7 @@ dotenv.config();
 export class UploadExistingService {
     private r2: S3Client;
 
-    constructor() {
+    constructor(@InjectModel(Files) private readonly filesModel :typeof Files) {
         this.r2 = new S3Client({
             region: 'auto',
             endpoint: process.env.R2_ENDPOINT!,
@@ -21,10 +23,12 @@ export class UploadExistingService {
             },
         });
     }
-    async uploadFile(file:Express.Multer.File[],title:string, desc:string , vauldId:string){
-        const existing = await this.r2.send(new ListObjectsV2Command({
+    async uploadFile(file:Express.Multer.File[],title:string, desc:string , vaultId:string){
+        try{
+
+            const existing = await this.r2.send(new ListObjectsV2Command({
                 Bucket:process.env.R2_BUCKET_NAME,
-                Prefix:`container/${vauldId}`,
+                Prefix:`container/${vaultId}`,
             
             }))
             
@@ -45,9 +49,29 @@ export class UploadExistingService {
                         ContentType:f.mimetype,
 
                     }))
-
-
+                    this.addToDb(title, desc, vaultId)
+                    
                 }
+            }catch(err){
+                console.log(err);
+
+            }
+            }
+
+    async addToDb(title:string, desc:string, vaultId:string):Promise<boolean>{
+        try{
+
+            await this.filesModel.create({
+                title:title,
+                desc:desc,
+                vaultId:vaultId
+            })
+            
+            return true;
+        }catch(err){
+            console.log(err)
+            return false;
+        }
     }
 
 }

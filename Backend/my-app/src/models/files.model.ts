@@ -43,7 +43,7 @@ export class Files extends Model<FilesAttributes, FileCreationAttributes> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    unique:true
+    unique:false
   })
   declare vaultId: string;
 
