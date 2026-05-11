@@ -124,3 +124,28 @@ when retrieving files also display title and description
 
 
 ----   id --------  title ------------- desc -------------- vaultid ------------
+
+
+
+
+
+
+11 may 2026, 
+actually forgot my objectives after two days weeekend break,
+- encrypt all files before storing.
+yeah today we did all encryption but yeah realized i wasnt getting shit dellted all , did simpmle SSE
+
+
+now do encryption client side encryption for logged in user only and sse for non logged,
+then yeahhh, just do that
+
+
+
+
+
+
+
+provides files,
+get buffer
+encrypt buffer store and return back the key
+

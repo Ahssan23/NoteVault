@@ -5,15 +5,23 @@ import 'multer';
 import { Vault } from '../models/vault.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { Files } from '../models/files.model';
+import { createCipheriv,createDecipheriv,randomBytes, scryptSync } from 'crypto';
+
+
+
+
 
 @Injectable()
 export class CreateVaultService {
   private r2: S3Client;
 
-constructor(@InjectModel(Vault)
-        private readonly vaultModel: typeof Vault,
-      @InjectModel(Files) private readonly filesModel: typeof Files
-      ) {
+  
+  constructor(@InjectModel(Vault)
+  private readonly vaultModel: typeof Vault,
+  @InjectModel(Files) 
+  private readonly filesModel: typeof Files,
+) {
+
 
 
     this.r2 = new S3Client({
@@ -29,6 +37,8 @@ constructor(@InjectModel(Vault)
   // immage.png 
   //.split('p')
 // ['image.' ,'ng']
+
+
   async uploadFiles(files: Express.Multer.File[] , title:string, desc:string, vaultId:string): Promise<string[]> {
     const uploadedKeys: string[] = [];
 
@@ -40,12 +50,13 @@ constructor(@InjectModel(Vault)
       const ext = file.originalname.split('.').pop();
       const fileName = uuid()
       const key = `container/${vaultId}/${fileName}.${ext}`;
-        
+   
         await this.r2.send(new PutObjectCommand({
           Bucket: process.env.R2_BUCKET_NAME,
           Key: key,
           Body: file.buffer,
           ContentType: file.mimetype,
+          ServerSideEncryption:'AES256'
         }));
         
       }

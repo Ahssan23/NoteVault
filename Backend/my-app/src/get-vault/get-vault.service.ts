@@ -41,6 +41,7 @@ export class GetVaultService {
                     Bucket:process.env.R2_BUCKET_NAME,
                     Key:e.Key
                 })
+               
                 const url =await getSignedUrl(this.r2, command,{ expiresIn :3600});
                 
                 return url;
@@ -48,6 +49,8 @@ export class GetVaultService {
                 
             })?? []
         )
+
+
         
         return data;
     }
