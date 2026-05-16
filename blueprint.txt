@@ -138,6 +138,8 @@ yeah today we did all encryption but yeah realized i wasnt getting shit dellted 
 
 now do encryption client side encryption for logged in user only and sse for non logged,
 then yeahhh, just do that
+what is gonne be difference?
+user uploads the fooking file mate , we encrypt all the data before entering, then w eeeeee 
 
 
 

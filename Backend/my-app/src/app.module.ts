@@ -8,6 +8,8 @@ import { CreateVaultModule } from './create-vault/create-vault.module';
 import { UploadExistingModule } from './upload-existing/upload-existing.module';
 import { GetVaultService } from './get-vault/get-vault.service';
 import { GetVaultModule } from './get-vault/get-vault.module';
+import { CreateVaultLController } from './create-vault-l/create-vault-l.controller';
+import { CreateVaultLModule } from './create-vault-l/create-vault-l.module';
 
 
 @Module({
@@ -32,8 +34,8 @@ import { GetVaultModule } from './get-vault/get-vault.module';
     }
     
   }),
-    HomeModule, SignupModule, LoginModule, CreateVaultModule, UploadExistingModule, GetVaultModule],
+    HomeModule, SignupModule, LoginModule, CreateVaultModule, UploadExistingModule, GetVaultModule, CreateVaultLModule],
   controllers: [],
-  providers: [GetVaultService],
+  providers: [],
 })
 export class AppModule {}

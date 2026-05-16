@@ -6,7 +6,6 @@ import { Op } from 'sequelize';
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './login.dto';
-import { access } from 'fs';
 
 @Injectable()
 export class LoginService {

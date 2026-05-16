@@ -154,7 +154,7 @@
       vaultResult.classList.remove('show');
 
       try {
-        const res  = await fetch(`${BASE_URL}/upload/Create`, { method: 'POST', body: formData });
+        const res  = await fetch(`${BASE_URL}/uploadL/Create`, { method: 'POST', body: formData });
         const data = await res.json();
 
         if (res.ok) {

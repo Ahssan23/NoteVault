@@ -50,3 +50,22 @@ typescriptnew HeadObjectCommand({ Bucket, Key })
 Copy object
 typescriptnew CopyObjectCommand({ Bucket, CopySource: 'bucket/oldkey', Key: 'newkey' })
 All work the same way — await client.send(new XCommand({...})). Same for R2 since it's S3 compatible.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+AES 
+
+  plain text ----   subbytes ----- 

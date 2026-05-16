@@ -5,7 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 import type { Request, Response } from 'express';
 
 
-const FRONTEND_URL = 'http://localhost:4000';
+const FRONTEND_URL = 'https://notevault-1-pmjq.onrender.com';
 
 
 @Controller('login')

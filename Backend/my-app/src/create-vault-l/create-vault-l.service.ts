@@ -5,13 +5,15 @@ import 'multer';
 import { Vault } from '../models/vault.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { Files } from '../models/files.model';
+import { encryptBuffer } from 'src/utilis/crypto.utilis';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 
 
 
 
 @Injectable()
-export class CreateVaultService {
+export class CreateVaultLService {
   private r2: S3Client;
 
   
@@ -46,6 +48,7 @@ export class CreateVaultService {
     
     try{
     for (const file of files) {
+        const {encryptedBuffer, iv, authTag} =  encryptBuffer(file.buffer)
       const ext = file.originalname.split('.').pop();
       const fileName = uuid()
       const key = `container/${vaultId}/${fileName}.${ext}`;
@@ -53,9 +56,14 @@ export class CreateVaultService {
         await this.r2.send(new PutObjectCommand({
           Bucket: process.env.R2_BUCKET_NAME,
           Key: key,
-          Body: file.buffer,
+          Body: encryptedBuffer,
           ContentType: file.mimetype,
-          ServerSideEncryption:'AES256'
+            Metadata:{
+                 iv,
+      authTag,
+      originalMimetype: file.mimetype,
+      originalName: file.originalname,
+            }
         }));
         
       }

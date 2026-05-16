@@ -25,152 +25,145 @@
     <div id="grid"></div>
 
     <script>
-    const BASE_URL = 'https://notevault-y99c.onrender.com';
-    const btn = document.getElementById('submit-btn');
-    const grid = document.getElementById('grid');
-    const statusBar = document.getElementById('status-bar');
+   const BASE_URL = 'https://notevault-y99c.onrender.com';
+const btn = document.getElementById('submit-btn');
+const grid = document.getElementById('grid');
+const statusBar = document.getElementById('status-bar');
 
-    const IMAGE_EXTS = ['png','jpg','jpeg','gif','webp','svg','bmp','avif'];
-    const DOC_EXTS   = ['pdf','doc','docx','txt','md','csv','xls','xlsx','ppt','pptx'];
-    const VIDEO_EXTS = ['mp4','mov','webm','avi','mkv'];
+const IMAGE_TYPES = ['image/jpeg','image/png','image/webp','image/gif','image/svg+xml','image/bmp','image/avif'];
+const DOC_EXTS    = ['pdf','doc','docx','txt','md','csv','xls','xlsx','ppt','pptx'];
 
-    // getting the extension
+function setStatus(msg, type = '') {
+  statusBar.textContent = msg;
+  statusBar.className = type;
+}
 
-    function getExt(url) {
-        try {
-        const path = new URL(url).pathname;
-        return path.split('.').pop().toLowerCase();
-        } catch { return 'file'; }
+function showSkeletons(n = 4) {
+  grid.innerHTML = Array.from({ length: n }).map(() => `
+    <div class="skeleton-card">
+      <div class="skeleton skel-img"></div>
+      <div class="skeleton skel-bar"></div>
+    </div>
+  `).join('');
+}
+
+function getExt(name) {
+  return name.split('.').pop().toLowerCase();
+}
+
+function fileIconSVG(ext) {
+  const color = DOC_EXTS.includes(ext) ? '#e8ff47' : '#ff6b35';
+  return `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="4" width="28" height="36" rx="3" stroke="${color}" stroke-width="2"/>
+    <path d="M28 4v10h8" stroke="${color}" stroke-width="2" stroke-linecap="round"/>
+    <line x1="14" y1="22" x2="34" y2="22" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="14" y1="28" x2="30" y2="28" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="14" y1="34" x2="26" y2="34" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function base64ToBlob(base64, mimetype) {
+  const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+  return new Blob([bytes], { type: mimetype });
+}
+
+function renderFiles(files) {
+
+    console.log(files.data,'files')
+  grid.innerHTML = '';
+
+  if (!files.data.length) {
+    
+    setStatus('vault is empty.', 'err');
+    return;
+  }
+
+  files.data.forEach((file, i) => {
+    console.log(file,'thisisfile')
+    const { name, mimetype, data } = file;
+    const ext = getExt(name);
+    const isImage = IMAGE_TYPES.includes(mimetype);
+
+    const blob = base64ToBlob(data, mimetype);
+    const blobUrl = URL.createObjectURL(blob);
+
+    const card = document.createElement('div');
+    card.className = 'file-card';
+    card.style.animationDelay = `${i * 60}ms`;
+
+    let previewHTML = '';
+
+    if (isImage) {
+      previewHTML = `
+        <div class="card-preview">
+          <img src="${blobUrl}" alt="${name}" loading="lazy"
+            onerror="this.parentElement.innerHTML='<div class=\\'file-icon\\'>${fileIconSVG(ext)}<span class=\\'file-ext\\'>${ext}</span></div>'" />
+        </div>`;
+    } else {
+      previewHTML = `
+      <h2 class="card-title">hwllo</h2>
+        <div class="card-preview">
+          <div class="file-icon">
+            ${fileIconSVG(ext)}
+            <span class="file-ext">${ext}</span>
+          </div>
+        </div>`;
     }
 
-    // getting the filename
-    function getFilename(url) {
-        try {
-        const path = new URL(url).pathname;
-        const parts = path.split('/');
-        return decodeURIComponent(parts[parts.length - 1]);
-        } catch { return 'file'; }
-    }
+    card.innerHTML = `
+      ${previewHTML}
+      <div class="card-info">
+        <span class="card-name" title="${name}">${name}</span>
+        
+        <a class="card-dl" href="${blobUrl}" download="${name}">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M5 1v6M2 5l3 3 3-3M1 9h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          Download
+        </a>
+      </div>
+    `;
 
-    // mystery
-    function setStatus(msg, type = '') {
-        statusBar.textContent = msg;
-        statusBar.className = type;
-    }
+    grid.appendChild(card);
+  });
+}
 
-    function showSkeletons(n = 4) {
-        grid.innerHTML = Array.from({ length: n }).map(() => `
-        <div class="skeleton-card">
-            <div class="skeleton skel-img"></div>
-            <div class="skeleton skel-bar"></div>
-        </div>
-        `).join('');
-    }
+document.getElementById('vaultId').addEventListener('keydown', e => {
+  if (e.key === 'Enter') btn.click();
+});
 
-    function fileIconSVG(ext) {
-        const color = DOC_EXTS.includes(ext) ? '#e8ff47' : '#ff6b35';
-        return `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="8" y="4" width="28" height="36" rx="3" stroke="${color}" stroke-width="2"/>
-        <path d="M28 4v10h8" stroke="${color}" stroke-width="2" stroke-linecap="round"/>
-        <line x1="14" y1="22" x2="34" y2="22" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="14" y1="28" x2="30" y2="28" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="14" y1="34" x2="26" y2="34" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>`;
-    }
+btn.addEventListener('click', async () => {
+  const vaultId = document.getElementById('vaultId').value.trim();
+  if (!vaultId) { setStatus('enter a vault ID first.', 'err'); return; }
 
-    function renderFiles(urls) {
-        grid.innerHTML = '';
+  btn.disabled = true;
+  setStatus('retrieving vault...');
+  showSkeletons(4);
 
-        if (!urls.length) {
-        setStatus('vault is empty.', 'err');
-        return;
-        }
-
-        urls.forEach((url, i) => {
-        const ext = getExt(url);
-        const name = getFilename(url);
-        const isImage = IMAGE_EXTS.includes(ext);
-        const isVideo = VIDEO_EXTS.includes(ext);
-
-        const card = document.createElement('div');
-        card.className = 'file-card';
-        card.style.animationDelay = `${i * 60}ms`;
-
-        let previewHTML = '';
-
-        if (isImage) {
-            previewHTML = `
-            <div class="card-preview">
-                <img src="${url}" alt="${name}" loading="lazy"
-                onerror="this.parentElement.innerHTML='<div class=\\'file-icon\\'>${fileIconSVG(ext)}<span class=\\'file-ext\\'>${ext}</span></div>'" />
-            </div>`;
-        } else if (isVideo) {
-            previewHTML = `
-            <div class="card-preview">
-                <video src="${url}" muted preload="metadata" style="width:100%;height:100%;object-fit:cover;"></video>
-            </div>`;
-        } else {
-            previewHTML = `
-            <div class="card-preview">
-                <div class="file-icon">
-                ${fileIconSVG(ext)}
-                <span class="file-ext">${ext}</span>
-                </div>
-            </div>`;
-        }
-
-        card.innerHTML = `
-            ${previewHTML}
-            <div class="card-info">
-            <span class="card-name" title="${name}">${name}</span>
-            <a class="card-dl" href="${url}" target="_blank">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <path d="M5 1v6M2 5l3 3 3-3M1 9h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-                </svg>
-                Open
-            </a>
-            </div>
-        `;
-
-        grid.appendChild(card);
-        });
-    }
-
-    document.getElementById('vaultId').addEventListener('keydown', e => {
-        if (e.key === 'Enter') btn.click();
+  try {
+    const res = await fetch(`${BASE_URL}/getVault/getVaultId`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ vaultId })
     });
 
-    btn.addEventListener('click', async () => {
-        const vaultId = document.getElementById('vaultId').value.trim();
-        if (!vaultId) { setStatus('enter a vault ID first.', 'err'); return; }
+    const json = await res.json();
 
-        btn.disabled = true;
-        setStatus('retrieving vault...');
-        showSkeletons(4);
-
-        try {
-        const res = await fetch(`${BASE_URL}/getVault/getVaultId`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ vaultId })
-        });
-
-        const json = await res.json();
-
-        if (json.status === 200 && Array.isArray(json.data)) {
-            setStatus(`${json.data.length} file${json.data.length !== 1 ? 's' : ''} found.`, 'ok');
-            renderFiles(json.data);
-        } else {
-            setStatus('no files found or vault does not exist.', 'err');
-            grid.innerHTML = '';
-        }
-        } catch (err) {
-        setStatus('connection failed — is the server running?', 'err');
-        grid.innerHTML = '';
-        } finally {
-        btn.disabled = false;
-        }
-    });
-    </script>
+    setStatus(`${json.data.length} file${json.data.length !== 1 ? 's' : ''} found.`, 'ok');
+    renderFiles(json.data);
+    // if (json.ok && Array.isArray(json.data)) {
+    // console.log("should run function")
+    // } else {
+    //   setStatus('no files found or vault does not exist.', 'err');
+    //   grid.innerHTML = '';
+    // }
+  } catch (err) {
+    setStatus('connection failed — is the server running?', 'err');
+    grid.innerHTML = '';
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
     </body>
     </html>
