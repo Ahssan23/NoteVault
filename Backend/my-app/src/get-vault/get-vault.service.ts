@@ -30,18 +30,18 @@ import { Vault } from 'src/models/vault.model';
 
 async getVault(dto) {
     const prefix = `container/${dto.vaultId}`;
-    
+       
     const listResponse = await this.r2.send(new ListObjectsV2Command({
         Bucket: process.env.R2_BUCKET_NAME,
         Prefix: prefix,
     }));
-
     const data = await Promise.all(
         listResponse.Contents?.map(async (e) => {
             const response = await this.r2.send(new GetObjectCommand({
                 Bucket: process.env.R2_BUCKET_NAME,
                 Key: e.Key,
             }));
+            
 
             const buffer = Buffer.from(
                 await response.Body?.transformToByteArray()!
@@ -61,7 +61,7 @@ async getVault(dto) {
     );
 
     const metadata= await this.getFileData(dto.vaultId)
-    
+        
     
     return { // <-- status wraps the whole thing, not per file
         metadata:metadata,
@@ -69,7 +69,7 @@ async getVault(dto) {
     };
 }   
         async getFileData(vaultId:string){
-            const fileData = this.filesModel.findAll({
+            const fileData = this.filesModel.findOne({
                 where:{
                     vaultId:vaultId
                 }

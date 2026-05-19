@@ -20,15 +20,19 @@
         <input type="text" id="vaultId" placeholder="Enter vault ID..." autocomplete="off" />
         <button id="submit-btn">Retrieve</button>
     </div>
-
+    <h3 id="title" class="title"></h3>
+    <p id="desc" class="desc"></p>
     <div id="status-bar"></div>
     <div id="grid"></div>
 
     <script>
-   const BASE_URL = 'https://notevault-y99c.onrender.com';
+   const BASE_URL = 'http://localhost:3000';
 const btn = document.getElementById('submit-btn');
 const grid = document.getElementById('grid');
 const statusBar = document.getElementById('status-bar');
+let title = document.getElementById("title");
+let desc = document.getElementById("desc");
+
 
 const IMAGE_TYPES = ['image/jpeg','image/png','image/webp','image/gif','image/svg+xml','image/bmp','image/avif'];
 const DOC_EXTS    = ['pdf','doc','docx','txt','md','csv','xls','xlsx','ppt','pptx'];
@@ -69,17 +73,20 @@ function base64ToBlob(base64, mimetype) {
 
 function renderFiles(files) {
 
-    console.log(files.data,'files')
+    console.log(files.data.metadata,'files')
   grid.innerHTML = '';
 
-  if (!files.data.length) {
+  if (!files.data.data.length) {
     
     setStatus('vault is empty.', 'err');
     return;
   }
+  console.log(files.data)
+  title.innerText = files.data.metadata.title;
+  desc.innerText = files.data.metadata.desc;
 
-  files.data.forEach((file, i) => {
-    console.log(file,'thisisfile')
+  files.data.data.forEach((file, i) => {
+
     const { name, mimetype, data } = file;
     const ext = getExt(name);
     const isImage = IMAGE_TYPES.includes(mimetype);
@@ -97,11 +104,11 @@ function renderFiles(files) {
       previewHTML = `
         <div class="card-preview">
           <img src="${blobUrl}" alt="${name}" loading="lazy"
-            onerror="this.parentElement.innerHTML='<div class=\\'file-icon\\'>${fileIconSVG(ext)}<span class=\\'file-ext\\'>${ext}</span></div>'" />
+            onerror="this.parentElement.innerHTML='<div class=\\'file-icon\\'>${fileIconSVG(ext)}</div>
         </div>`;
     } else {
       previewHTML = `
-      <h2 class="card-title">hwllo</h2>
+      <h2 class="card-title"></h2>
         <div class="card-preview">
           <div class="file-icon">
             ${fileIconSVG(ext)}
@@ -149,8 +156,9 @@ btn.addEventListener('click', async () => {
 
     const json = await res.json();
 
-    setStatus(`${json.data.length} file${json.data.length !== 1 ? 's' : ''} found.`, 'ok');
-    renderFiles(json.data);
+    
+    setStatus(`${json.data.data.length} file${json.data.length !== 1 ? 's' : ''} found.`, 'ok');
+    renderFiles(json);
     // if (json.ok && Array.isArray(json.data)) {
     // console.log("should run function")
     // } else {
@@ -158,6 +166,7 @@ btn.addEventListener('click', async () => {
     //   grid.innerHTML = '';
     // }
   } catch (err) {
+    console.log(err)
     setStatus('connection failed — is the server running?', 'err');
     grid.innerHTML = '';
   } finally {

@@ -40,7 +40,7 @@ export class CreateVaultService {
 
   async uploadFiles(files: Express.Multer.File[] , title:string, desc:string, vaultId:string): Promise<string[]> {
     const uploadedKeys: string[] = [];
-
+    let Key='something';
     // uploading file to bucket
     
     
@@ -49,6 +49,7 @@ export class CreateVaultService {
       const ext = file.originalname.split('.').pop();
       const fileName = uuid()
       const key = `container/${vaultId}/${fileName}.${ext}`;
+      //  Key = key
    
         await this.r2.send(new PutObjectCommand({
           Bucket: process.env.R2_BUCKET_NAME,
@@ -76,21 +77,20 @@ export class CreateVaultService {
         
         throw new InternalServerErrorException("Upload failed");
       }
+      console.log(Key)
       
-    await this.storeVaultDb(title, desc, vaultId)
-      return uploadedKeys ;
-    }
+    await this.storeVaultDb(title, desc, vaultId, Key)
+    return uploadedKeys ;
+  }
 
 
 
 
-      async storeVaultDb(title:string, desc:string, vaultId:string) :Promise<boolean>{
-        await this.vaultModel.create({
-          vaultId:vaultId
-        })
+      async storeVaultDb(title:string, desc:string, vaultId:string, Key:string) :Promise<boolean>{
         await this.filesModel.create({
           title:title,
           desc:desc,
+          key:Key,
           vaultId:vaultId
         })
 

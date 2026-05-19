@@ -64,7 +64,8 @@ export class UploadExistingService {
             await this.filesModel.create({
                 title:title,
                 desc:desc,
-                vaultId:vaultId
+                vaultId:vaultId,
+                key:'somekey'
             })
             
             return true;

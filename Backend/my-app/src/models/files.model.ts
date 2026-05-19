@@ -5,12 +5,14 @@ import {
   DataType,
   PrimaryKey,
   AutoIncrement,
+  AllowNull,
 } from "sequelize-typescript";
 
 interface FilesAttributes {
   id: number;
   title: string;
   desc:string;
+  key:string;
   vaultId:string;
 }
 
@@ -33,7 +35,9 @@ export class Files extends Model<FilesAttributes, FileCreationAttributes> {
     allowNull: false,
     unique:false
   })
-  declare title: string;@Column({
+  declare title: string;
+  
+  @Column({
     type: DataType.STRING,
     allowNull: false,
     unique:false
@@ -41,11 +45,20 @@ export class Files extends Model<FilesAttributes, FileCreationAttributes> {
   declare desc: string;
 
   @Column({
+    type:DataType.STRING,
+    allowNull:false,
+    unique:true
+  })
+  declare key:string;
+
+  @Column({
     type: DataType.STRING,
     allowNull: false,
     unique:false
   })
   declare vaultId: string;
+
+
 
   
 
