@@ -10,6 +10,7 @@ import { GetVaultService } from './get-vault/get-vault.service';
 import { GetVaultModule } from './get-vault/get-vault.module';
 import { CreateVaultLController } from './create-vault-l/create-vault-l.controller';
 import { CreateVaultLModule } from './create-vault-l/create-vault-l.module';
+import { StoreKeysModule } from './store-keys/store-keys.module';
 
 
 @Module({
@@ -34,7 +35,7 @@ import { CreateVaultLModule } from './create-vault-l/create-vault-l.module';
     }
     
   }),
-    HomeModule, SignupModule, LoginModule, CreateVaultModule, UploadExistingModule, GetVaultModule, CreateVaultLModule],
+    HomeModule, SignupModule, LoginModule, CreateVaultModule, UploadExistingModule, GetVaultModule, CreateVaultLModule, StoreKeysModule],
   controllers: [],
   providers: [],
 })

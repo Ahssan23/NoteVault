@@ -12,12 +12,14 @@ export const home = express.Router();
 
 home.get("/",  (req,res)=>{
     const token = req.cookies.access_token;
-     verifyToken(token)
-
+    verifyToken(token)
+    
     if (verifyToken(token) === true){
+        console.log("logged in ")
         res.render("home", {loggedIn: true});
     }
     else{
+        console.log("non logged in ")
         res.render("home", {loggedIn:false})
     }
 })

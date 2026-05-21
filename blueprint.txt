@@ -154,4 +154,13 @@ encrypt buffer store and return back the key
 
 
 
-fetch files, match the keys somehow
+fetch files, match the keys somehow (dont need to do this)
+
+
+when user create vavult, add option of storing vault key into key collection
+key collection 
+
+id key  userId
+
+
+this feature should only be for logged in user 
